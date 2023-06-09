@@ -3,23 +3,21 @@ import { API_endpoint, API_key } from "./Api";
 import axios from "axios";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiTargetLock } from "react-icons/bi";
+import useGeoLocation from "../hooks/useGeolocation";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
+  const location = useGeoLocation();
 
   const handleCurrent = () => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLatitude(position.coords.latitude);
-      setLongitude(position.coords.longitude);
 
-      let finalAPIEndPoint = `${API_endpoint}lat=${position.coords.latitude}&lon=${position.coords.longitude}&exclude=hourly,daily&appid=${API_key}`;
+
+      let finalAPIEndPoint = `${API_endpoint}lat=${location.coordinates.lat}&lon=${location.coordinates.lng}&exclude=hourly,daily&appid=${API_key}`;
       axios.get(finalAPIEndPoint).then((response) => {
         setSearchTerm(response.data.name);
       });
-    });
-  };
+    };
+  
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -65,6 +63,6 @@ const Search = () => {
       
     </div>
   );
-};
+  };
 
 export default Search;
