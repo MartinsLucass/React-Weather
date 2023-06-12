@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { API_endpoint, API_key } from "./Api";
+import { API_endpoint, API_key } from "./WeatherService";
 import axios from "axios";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiTargetLock } from "react-icons/bi";
@@ -30,12 +30,6 @@ const Search = () => {
 
   return (
     <div className="flex sm:flex-row flex-col justify-center items-center mt-4 h-14 w-full space-y-4 sm:space-y-0 space-x-1 sm:space-x-4">
-      <header className="flex flex-row items-center gap-2 h-full">
-        <h1 className="text-aliceblue text-3xl flex items-center text-gray-50">
-          Weather
-        </h1>
-        <img className="h-full" src="./src/images/logo.svg" alt="logo" />
-      </header>
       <form className="flex items-center justify-center flex-row h-full ml-4 sm:ml-8" onSubmit={handleSubmit}>
         <input
           className="bg-dark-200 text-gray-50 rounded-l-xl px-4 py-2 focus:outline-none w-72 sm:w-80 placeholder-zinc-500 h-full sm:h-4/5"
