@@ -6,7 +6,7 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="max-w-screen-xl mx-auto px-4 my-4 flex flex-col gap-10 sm:gap-8 ">
+    <div className="max-w-screen-xl justify-center items-center px-4 my-4 flex flex-col space-y-8">
       <NavBar />
       <Search />
       <WeatherBox />
