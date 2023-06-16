@@ -20,7 +20,7 @@ const NavBar = () => {
         <img className="h-full" src="./src/images/logo.svg" alt="logo" />
       </header>
       <nav className="flex items-center space-x-2">
-        <a href="https://github.com/seu-usuario" target="_blank" rel="noopener noreferrer" className="flex items-center">
+        <a href="https://github.com/MartinsLucass" target="_blank" rel="noopener noreferrer" className="flex items-center">
           <AiFillGithub size={30} className="text-zinc-700 hover:text-zinc-800 dark:text-gray-50 text-2xl dark:hover:text-zinc-400 cursor-pointer hover:scale-105 transition-transform" />
         </a>
         <button

@@ -4,27 +4,54 @@ import axios from "axios";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiTargetLock } from "react-icons/bi";
 import useGeoLocation from "../hooks/useGeolocation";
+import getFormattedWeatherData from "./WeatherService";
 
-const Search = () => {
+const Search = ({ setWeather }) => {
+  const [input, setInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
   const location = useGeoLocation();
+
+  const fetchData = async () => {
+    try {
+      const searchParams = { q: searchTerm };
+      setLoading(true);
+      const data = await getFormattedWeatherData(searchParams);
+      setWeather(data.currentData);
+    } catch (error) {
+      console.log("Erro ao obter os dados do clima:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCurrent = () => {
     let finalAPIEndPoint = `${API_endpoint}lat=${location.coordinates.lat}&lon=${location.coordinates.lng}&exclude=hourly,daily&appid=${API_key}`;
     axios.get(finalAPIEndPoint).then((response) => {
       setSearchTerm(response.data.name);
+      setInput(response.data.name);
     });
   };
 
   const handleChange = (e) => {
     const { value } = e.target;
-    setSearchTerm(value);
-    localStorage.setItem("search", value);
+    setInput(value);
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSearchTerm(input);
+    localStorage.setItem("search", searchTerm);
+    fetchData();
   };
+
+  useEffect(() => {
+    const storedSearch = localStorage.getItem("search");
+    if (storedSearch) {
+      setInput(storedSearch);
+      setSearchTerm(storedSearch);
+    }
+  }, []);
 
   useEffect(() => {
     if (localStorage.getItem("search") !== null ) {
@@ -43,7 +70,7 @@ const Search = () => {
           type="text"
           placeholder="Search for city..."
           autoComplete="off"
-          value={searchTerm}
+          value={input}
           onChange={handleChange}
         />
         <button
@@ -61,6 +88,7 @@ const Search = () => {
           <span className="hidden md:flex">Current Location</span>
         </button>
       </form>
+      {loading && <div>Loading...</div>}
     </div>
   );
 };
