@@ -1,10 +1,11 @@
-export const API_endpoint = `https://api.openweathermap.org/data/2.5/weather?`
-export const API_key = `cc1d9b64613c605de9790bf618e14e65`
+export const API_endpoint = `https://api.openweathermap.org/data/2.5/weather?`;
+export const API_key = `cc1d9b64613c605de9790bf618e14e65`;
 
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 const API_KEY = "cc1d9b64613c605de9790bf618e14e65";
 
-const makeIconURL = (iconID) => `http://openweathermap.org/img/wn/${iconID}@2x.png`;
+const makeIconURL = (iconID) =>
+  `http://openweathermap.org/img/wn/${iconID}@2x.png`;
 
 const getWeatherData = (searchParams) => {
   const url = new URL(`${BASE_URL}/weather`);
@@ -18,14 +19,14 @@ const formattedCurrentWeather = (data) => {
   const timestamp = data.dt;
   const date = new Date(timestamp * 1000);
 
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = String(date.getFullYear());
 
   const formattedDateString = `${day}/${month}/${year}`;
 
   const formattedWeather = {
-    visibility: (data.visibility / 1000),
+    visibility: data.visibility / 1000,
     location: data.name,
     condition: data.cod,
     country: data.sys.country,
@@ -44,14 +45,10 @@ const formattedCurrentWeather = (data) => {
   return formattedWeather;
 };
 
-
-
-const getFormattedWeatherData = async (searchParams) => {
+export const getFormattedWeatherData = async (searchParams) => {
   const currentData = await getWeatherData(searchParams).then(
     formattedCurrentWeather
   );
 
   return { currentData };
 };
-
-export default getFormattedWeatherData;

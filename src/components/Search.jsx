@@ -4,45 +4,39 @@ import axios from "axios";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiTargetLock } from "react-icons/bi";
 import useGeoLocation from "../hooks/useGeolocation";
-import getFormattedWeatherData from "./WeatherService";
 
-const Search = ({ setWeather }) => {
+const Search = ({ setCity }) => {
   const [input, setInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
   const location = useGeoLocation();
 
-  const fetchData = async () => {
-    try {
-      const searchParams = { q: searchTerm };
-      setLoading(true);
-      const data = await getFormattedWeatherData(searchParams);
-      setWeather(data.currentData);
-    } catch (error) {
-      console.log("Erro ao obter os dados do clima:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleCurrent = () => {
-    let finalAPIEndPoint = `${API_endpoint}lat=${location.coordinates.lat}&lon=${location.coordinates.lng}&exclude=hourly,daily&appid=${API_key}`;
+    const finalAPIEndPoint = `${API_endpoint}lat=${location.coordinates.lat}&lon=${location.coordinates.lng}&exclude=hourly,daily&appid=${API_key}`;
     axios.get(finalAPIEndPoint).then((response) => {
-      setSearchTerm(response.data.name);
-      setInput(response.data.name);
+      const cityName = response.data.name;
+      if (cityName) {
+        setSearchTerm(cityName);
+        setInput(cityName);
+        setCity(cityName);
+        localStorage.setItem("search", cityName);
+      }
     });
   };
 
   const handleChange = (e) => {
     const { value } = e.target;
     setInput(value);
+    setSearchTerm(value);
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const handleInput = () => {
     setSearchTerm(input);
-    localStorage.setItem("search", searchTerm);
-    fetchData();
+    localStorage.setItem("search", input);
+    setCity(input);
   };
 
   useEffect(() => {
@@ -50,12 +44,6 @@ const Search = ({ setWeather }) => {
     if (storedSearch) {
       setInput(storedSearch);
       setSearchTerm(storedSearch);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (localStorage.getItem("search") !== null ) {
-      setSearchTerm(localStorage.getItem("search"));
     }
   }, []);
 
@@ -74,6 +62,7 @@ const Search = ({ setWeather }) => {
           onChange={handleChange}
         />
         <button
+          onClick={handleInput}
           type="submit"
           className="flex justify-center items-center rounded-r-xl bg-zinc-300 text-gray-800 dark:bg-zinc-800 dark:text-gray-50 h-full sm:h-4/5 w-12"
         >
@@ -81,14 +70,13 @@ const Search = ({ setWeather }) => {
         </button>
 
         <button
-          className="flex justify-center items-center rounded-full md:rounded-lg gap-2 bg-purple-500 light:bg-red-500 text-zinc-950 h-full sm:h-4/5 px-4 ml-4"
+          className="flex justify-center items-center rounded-full md:rounded-lg gap-2 bg-purple-600 light:bg-blue-500 text-zinc-950 h-full sm:h-4/5 px-4 ml-4 hover:size-20 hover:scale-105 transition-transform"
           onClick={handleCurrent}
         >
           <BiTargetLock size={20} />
           <span className="hidden md:flex">Current Location</span>
         </button>
       </form>
-      {loading && <div>Loading...</div>}
     </div>
   );
 };
