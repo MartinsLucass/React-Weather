@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AiFillGithub } from "react-icons/ai";
+import { AiFillGithub, AiOutlineCloud } from "react-icons/ai";
 import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { useTheme } from "../hooks/useTheme";
 
@@ -12,7 +12,9 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    setImage(theme === "dark" ? "./src/images/logoLight.svg" : "./src/images/logoDark.svg");
+    setImage(theme === "dark" 
+    ? < AiOutlineCloud size={60} color="#e5e7eb"/> 
+    : < AiOutlineCloud size={60} color="#1a202c"/>);
   }, [theme]);
 
   return (
@@ -21,7 +23,7 @@ const NavBar = () => {
         <h1 className="text-3xl flex items-center text-gray-900 dark:text-gray-50">
           Weather
         </h1>
-        <img className="h-full" src={image} alt="logo" />
+        {image}
       </header>
       <nav className="flex items-center space-x-2">
         <a
